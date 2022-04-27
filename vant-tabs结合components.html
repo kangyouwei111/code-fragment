@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dynamic Components Example</title>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css"
+    />
+
+    <script src="https://unpkg.com/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+    <style>
+      .tab-button {
+        padding: 6px 10px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        background: #f0f0f0;
+        margin-bottom: -1px;
+        margin-right: -1px;
+      }
+      .tab-button:hover {
+        background: #e0e0e0;
+      }
+      .tab-button.active {
+        background: #e0e0e0;
+      }
+      .tab {
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dynamic-component-demo" class="demo">
+      <!-- <button
+        v-for="tab in tabs"
+        v-bind:key="tab"
+        v-bind:class="['tab-button', { active: currentTab === tab }]"
+        v-on:click="currentTab = tab"
+      >
+        {{ tab }}
+      </button> -->
+
+      <van-tabs @click="onChangeTab">
+        <van-tab v-for="(item,index) in tabs" :title="item">
+          <!-- 内容 {{ index }} -->
+        </van-tab>
+      </van-tabs>
+      <component v-bind:is="currentTabComponent" class="tab"></component>
+    </div>
+
+    <script>
+      Vue.component("tab-home", {
+        template: "<div>Home component</div>"
+      });
+      Vue.component("tab-posts", {
+        template: "<div>Posts component</div>"
+      });
+      Vue.component("tab-archive", {
+        template: "<div>Archive component</div>"
+      });
+
+      new Vue({
+        el: "#dynamic-component-demo",
+        data: {
+          currentTab: "Home",
+          tabs: ["Home", "Posts", "Archive"]
+        },
+        computed: {
+          currentTabComponent: function () {
+            return "tab-" + this.currentTab.toLowerCase();
+          }
+        },
+        methods: {
+          onChangeTab(name, title) {
+            console.log(name, title);
+            this.currentTab = title;
+          }
+        }
+      });
+      Vue.use(Tab);
+      Vue.use(Tabs);
+    </script>
+  </body>
+</html>
